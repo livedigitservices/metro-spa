@@ -68,7 +68,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="grain relative min-h-screen bg-cream font-body text-ink">
+    <div className=" relative min-h-screen bg-cream font-body text-ink">
       {loading && <Preloader onDone={() => setLoading(false)} />}
 
       <Navbar onBook={() => scrollToBooking()} />

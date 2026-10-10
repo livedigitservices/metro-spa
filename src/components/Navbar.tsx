@@ -2,7 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Menu, X, Phone, MapPin, ArrowUpRight } from "lucide-react";
-import { LotusMark } from "./ui";
+import logo from "../assets/logo.png";
+
+// set to false if your logo image already contains the "Metro SPA" name
+const SHOW_WORDMARK = true;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -80,15 +83,19 @@ export default function Navbar({ onBook }: { onBook: () => void }) {
           >
             {/* logo */}
             <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="group flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold-2 via-gold to-gold-3 text-ink shadow-lg shadow-gold/20">
-                <LotusMark className="h-6 w-6" />
-              </span>
-              <span className="text-left leading-none">
-                <span className="font-script block text-[26px] leading-none text-cream">Metro</span>
-                <span className="block text-[9px] font-bold uppercase tracking-[0.42em] text-gold-2">
-                  SPA · Unisex
+              <img
+                src={logo}
+                alt="Metro Spa"
+                className="h-11 w-auto max-w-[140px] object-contain md:h-15"
+              />
+              {/* {SHOW_WORDMARK && (
+                <span className="text-left leading-none">
+                  <span className="font-script block text-[26px] leading-none text-cream">Metro</span>
+                  <span className="block text-[9px] font-bold uppercase tracking-[0.42em] text-gold-2">
+                    SPA · Unisex
+                  </span>
                 </span>
-              </span>
+              )} */}
             </button>
 
             {/* desktop links */}
@@ -141,10 +148,8 @@ export default function Navbar({ onBook }: { onBook: () => void }) {
         <div className="pointer-events-none absolute -left-32 bottom-0 h-[420px] w-[420px] rounded-full bg-gold/10 blur-[120px]" />
         <div className="flex items-center justify-between px-6 py-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gold text-ink">
-              <LotusMark className="h-6 w-6" />
-            </span>
-            <span className="font-script text-3xl text-gold-2">Metro</span>
+            <img src={logo} alt="Metro Spa" className="h-11 w-auto max-w-[140px] object-contain" />
+            {SHOW_WORDMARK && <span className="font-script text-3xl text-gold-2">Metro</span>}
           </div>
           <button
             onClick={() => setOpen(false)}

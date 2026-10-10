@@ -1,11 +1,33 @@
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, type ReactElement } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUp, MapPin, Clock, Phone, Camera, Globe } from "lucide-react";
-import { ADDRESS, SERVICES } from "../data/spa";
+import { ArrowUp, MapPin, Clock, Phone, Navigation } from "lucide-react";
+import { ADDRESS, SERVICES, SOCIALS } from "../data/spa";
 import { LotusMark } from "./ui";
+import logo from "../assets/logo.png"
 
 gsap.registerPlugin(ScrollTrigger);
+
+const SOCIAL_ICONS: Record<string, ReactElement> = {
+  instagram: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  facebook: (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="h-[18px] w-[18px]">
+      <path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.3 0-3.9 1.4-3.9 4v2.2H8v3h2.5V21h3z" />
+    </svg>
+  ),
+  whatsapp: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]">
+      <path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.3L3 21z" />
+      <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-.8.8c-.8-.4-1.6-1.2-2-2l.8-.8-1-2L9 9.5z" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+};
 
 export default function Footer({ onBook }: { onBook: () => void }) {
   const root = useRef<HTMLElement>(null);
@@ -43,7 +65,7 @@ export default function Footer({ onBook }: { onBook: () => void }) {
               Book Your Appointment
             </button>
             <a
-              href="tel:+919000000000"
+              href={`tel:+${ADDRESS.phoneDigits}`}
               className="flex w-full items-center justify-center gap-2 rounded-full border border-cream/20 px-10 py-4 text-[12px] font-bold uppercase tracking-[0.22em] transition hover:border-gold hover:text-gold-2 sm:w-auto"
             >
               <Phone className="h-4 w-4" /> {ADDRESS.phone}
@@ -55,28 +77,28 @@ export default function Footer({ onBook }: { onBook: () => void }) {
         <div className="grid gap-10 py-16 md:grid-cols-12">
           <div className="md:col-span-4">
             <div className="flex items-center gap-3">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-gold-2 via-gold to-gold-3 text-ink">
-                <LotusMark className="h-7 w-7" />
-              </span>
-              <div>
-                <p className="font-script text-3xl leading-none text-gold-2">Metro</p>
-                <p className="text-[9px] font-bold uppercase tracking-[0.42em] text-cream/60">SPA · Unisex</p>
-              </div>
+              <img
+                              src={logo}
+                              alt="Metro Spa"
+                              className="h-15 w-auto max-w-[140px] object-contain md:h-18"
+                            />
             </div>
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/55">
               Health & Wellness Centre for Unisex — a premium sanctuary for massage, aroma,
               warm-stone and body-renewal rituals.
             </p>
             <div className="mt-6 flex gap-3">
-              {[Camera, Globe].map((Icon, i) => (
+              {SOCIALS.map((s) => (
                 <a
-                  key={i}
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
+                  key={s.id}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/15 transition hover:border-gold hover:text-gold-2"
-                  aria-label="Social link"
+                  aria-label={`Metro Spa on ${s.label}`}
+                  title={s.label}
                 >
-                  <Icon className="h-4 w-4" />
+                  {SOCIAL_ICONS[s.id]}
                 </a>
               ))}
             </div>
@@ -118,13 +140,27 @@ export default function Footer({ onBook }: { onBook: () => void }) {
             <ul className="mt-5 space-y-4 text-sm leading-relaxed text-cream/60">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                {ADDRESS.line1} {ADDRESS.line2} {ADDRESS.line3}
+                <address className="not-italic">
+                  {ADDRESS.line1}
+                  <br />
+                  {ADDRESS.line2}
+                  <br />
+                  {ADDRESS.line3}
+                  <a
+                    href={ADDRESS.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 flex w-fit items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-gold-2 transition hover:text-gold"
+                  >
+                    <Navigation className="h-3.5 w-3.5" /> Get directions
+                  </a>
+                </address>
               </li>
               <li className="flex items-center gap-3">
                 <Clock className="h-4 w-4 shrink-0 text-gold" /> {ADDRESS.hours}
               </li>
               <li>
-                <a href="tel:+919000000000" className="font-display text-xl italic text-gold-2">
+                <a href={`tel:+${ADDRESS.phoneDigits}`} className="font-display text-xl italic text-gold-2">
                   {ADDRESS.phone}
                 </a>
               </li>

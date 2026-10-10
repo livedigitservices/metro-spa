@@ -4,8 +4,20 @@ export const ADDRESS = {
   line3: "Medchal–Malkajgiri District, Telangana — 500067",
   short: "Suchitra X Roads, Hyderabad",
   hours: "Open Daily · 10:00 AM – 9:00 PM",
-  phone: "+91 90000 00000",
+  phone: "+91 7893754324",
+  // TODO: replace with the client's real number (digits only, with country code)
+  phoneDigits: "91 7893754324",
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent("Metro Spa, Suchitra X Roads, Jeedimetla, Hyderabad, Telangana 500067"),
 };
+
+// TODO: replace each url with the client's real profile / chat link
+export const SOCIALS = [
+  { id: "instagram", label: "Instagram", url: "https://instagram.com/metrospa" },
+  { id: "facebook", label: "Facebook", url: "https://facebook.com/metrospa" },
+  { id: "whatsapp", label: "WhatsApp", url: "https://wa.me/917893754324" },
+] as const;
 
 export type Service = {
   id: string;
