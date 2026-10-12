@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { LotusMark } from "./ui";
+import logo from "../assets/logo.png";
+import { Menu, X, Phone, MapPin, ArrowUpRight } from "lucide-react";
 
 export default function Preloader({ onDone }: { onDone: () => void }) {
   const root = useRef<HTMLDivElement>(null);
@@ -34,7 +36,11 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
         <LotusMark className="h-16 w-16 animate-breathe" />
       </div>
       <div className="mt-6 overflow-hidden">
-        <p className="pre-word font-script text-5xl text-gold-2 md:text-6xl">Metro</p>
+        <img
+                        src={logo}
+                        alt="Metro Spa"
+                        className="h-11 w-auto max-w-[140px] object-contain md:h-19"
+                      />
       </div>
       <div className="overflow-hidden">
         <p className="pre-word mt-1 text-[11px] font-bold uppercase tracking-[0.55em] text-cream/70">
