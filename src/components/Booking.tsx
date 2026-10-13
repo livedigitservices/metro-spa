@@ -1,11 +1,13 @@
 import { useLayoutEffect, useRef, useState, type FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MapPin, Clock, Phone, CheckCircle2, CalendarDays, Sparkles } from "lucide-react";
+import { MapPin, Clock, Phone, CheckCircle2, CalendarDays, Sparkles, Loader2 } from "lucide-react";
 import { SERVICES, SCRUBS, ADDRESS } from "../data/spa";
 import { Eyebrow } from "./ui";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY as string;
 
 const ALL_SERVICES = [
   ...SERVICES.map((s) => s.name),
@@ -30,6 +32,8 @@ export default function Booking({
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [done, setDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   useLayoutEffect(() => {
     setService(preselected);
@@ -48,11 +52,51 @@ export default function Booking({
     return () => ctx.revert();
   }, []);
 
-  const submit = (e: FormEvent) => {
+  useLayoutEffect(() => {
+    if (done) {
+      gsap.fromTo(".success-pop", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" });
+    }
+  }, [done]);
+
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) return;
-    setDone(true);
-    gsap.fromTo(".success-pop", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" });
+    if (!name.trim() || !phone.trim() || submitting) return;
+
+    // honeypot spam check
+    const formData = new FormData(e.currentTarget);
+    if (formData.get("botcheck")) return;
+
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `New Spa Booking Request — ${service}`,
+          from_name: "Metro Spa Website",
+          name: name.trim(),
+          phone: phone.trim(),
+          service,
+          preferred_date: date || "Not specified",
+          preferred_time: time || "Not specified",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setDone(true);
+      } else {
+        setError(data.message || "Something went wrong. Please try again or call us directly.");
+      }
+    } catch {
+      setError("Network error. Please try again or call us directly.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -136,6 +180,9 @@ export default function Booking({
           <div className="book-reveal rounded-[1.8rem] border border-ink/10 bg-white/85 p-8 shadow-[0_50px_100px_-40px_rgba(11,26,23,0.35)] backdrop-blur md:p-10 lg:col-span-7">
             {!done ? (
               <form onSubmit={submit} className="flex flex-col gap-5">
+                {/* honeypot */}
+                <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+
                 <div className="flex items-center gap-3">
                   <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-ink text-gold-2">
                     <CalendarDays className="h-5 w-5" />
@@ -240,12 +287,27 @@ export default function Booking({
                   </div>
                 </div>
 
+                {error && (
+                  <p className="rounded-2xl border border-red-300/60 bg-red-50 px-4 py-3 text-[13px] font-semibold text-red-700">
+                    {error}
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="group relative overflow-hidden rounded-full bg-ink text-[12px] font-extrabold uppercase tracking-[0.24em] text-gold-2 transition-all hover:shadow-[0_20px_50px_-15px_rgba(11,26,23,0.6)]"
+                  disabled={submitting}
+                  className="group relative overflow-hidden rounded-full bg-ink text-[12px] font-extrabold uppercase tracking-[0.24em] text-gold-2 transition-all hover:shadow-[0_20px_50px_-15px_rgba(11,26,23,0.6)] disabled:cursor-not-allowed disabled:opacity-70"
                   style={{ paddingTop: 18, paddingBottom: 18 }}
                 >
-                  <span className="relative z-10">Confirm Reservation Request</span>
+                  <span className="relative z-10 inline-flex items-center justify-center gap-2">
+                    {submitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" /> Sending…
+                      </>
+                    ) : (
+                      "Confirm Reservation Request"
+                    )}
+                  </span>
                   <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-gold/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                 </button>
                 <p className="text-center text-[12px] text-ink/45">
@@ -270,6 +332,9 @@ export default function Booking({
                     setDone(false);
                     setName("");
                     setPhone("");
+                    setDate("");
+                    setTime("");
+                    setError("");
                   }}
                   className="mt-8 rounded-full border border-ink/20 px-8 py-3.5 text-[11px] font-extrabold uppercase tracking-[0.22em] transition hover:bg-ink hover:text-gold-2"
                 >

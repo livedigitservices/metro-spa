@@ -90,7 +90,7 @@ export default function App() {
       {/* floating dock */}
       <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-[70] flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-cream/10 bg-ink/85 p-1.5 sm:p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] backdrop-blur-xl md:bottom-6">
         <a
-          href="tel:+919000000000"
+          href="tel:+917893754324"
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cream/15 sm:h-12 sm:w-12 text-cream transition hover:border-gold hover:text-gold-2"
           aria-label="Call spa"
         >
@@ -101,7 +101,7 @@ export default function App() {
           className="group flex items-center gap-2 whitespace-nowrap rounded-full bg-gold py-3 pl-5 pr-6 text-[10px] font-extrabold uppercase tracking-[0.16em] sm:gap-2.5 sm:py-3.5 sm:pl-6 sm:pr-7 sm:text-[11px] sm:tracking-[0.2em] text-ink transition-all hover:bg-gold-2"
         >
           <CalendarCheck style={{ height: 17, width: 17 }} />
-          Book Now · 10–9
+         · Book Now · 
         </button>
       </div>
     </div>

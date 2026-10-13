@@ -14,7 +14,7 @@ export const ADDRESS = {
 
 // TODO: replace each url with the client's real profile / chat link
 export const SOCIALS = [
-  { id: "instagram", label: "Instagram", url: "https://instagram.com/metrospa" },
+  { id: "instagram", label: "Instagram", url: "https://instagram.com/metrospa9?cplk=NHVyenphYmZheGc2" },
   { id: "facebook", label: "Facebook", url: "https://www.facebook.com/metrospa.suchitra.7" },
   { id: "whatsapp", label: "WhatsApp", url: "https://wa.me/917893754324" },
 ] as const;
